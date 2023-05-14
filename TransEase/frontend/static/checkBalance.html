@@ -1,0 +1,92 @@
+<html>
+
+<head>
+	<title>Balance Checker</title>
+	<style type="text/css">
+		body {
+			text-align: center;
+			font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+			font-weight: 300;
+			background-color: antiquewhite;
+		}
+
+		#balance {
+			font-size: 55pt;
+			height: 100px;
+			line-height: 100px;
+			margin-bottom: 20px;
+		}
+
+		input {
+			width: 300px;
+			height: 60px;
+			text-align: center;
+			border-radius: 3px;
+			border: 3px solid #000000;
+			background: #fff;
+			padding: 7px;
+			font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+			font-size: 20px;
+
+		}
+
+		h1 {
+			font-family: 'Times New Roman', Times, serif;
+			font-size: 50px;
+		}
+
+		button {
+			display: block;
+			margin: auto;
+			width: 600px;
+			margin-top: 20px;
+			height: 60px;
+			background: #d9d9d9;
+			color: #000;
+			border: 3px;
+			border-color: #000;
+			font-size: 15pt;
+			font-weight: bolder;
+		}
+	</style>
+	<script type="text/javascript">
+		function getBalance() {
+			var http = new XMLHttpRequest();
+			var url = "https://localhost:3000/user/balance";
+
+			var params = "username=" + encodeURIComponent(document.getElementById('username').value) + "&password=" + encodeURIComponent(document.getElementById('password').value);
+			http.open("POST", url, true);
+
+			//Send the proper header information along with the request
+			http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+			http.onreadystatechange = function () {//Call a function when the state changes.
+				if (http.readyState == 4 && http.status == 200) {
+
+					console.log(http.responseText);
+					data = JSON.parse(http.responseText)
+					if (data.success) {
+						document.getElementById("balance").innerHTML = "$" + data.balance;
+					}
+
+				}
+
+			}
+
+
+			http.send(params);
+
+		}
+	</script>
+</head>
+
+<body>
+	<br><br><br>
+	<span>
+		<h1>CHECK BALANCE</h1>
+	</span>
+	<div id="balance">&nbsp;</div>
+	<input type="text" id="username" placeholder="USERNAME" />
+	<input type="password" id="password" placeholder="PASSWORD" />
+	<button onclick="getBalance()"><strong>CHECK</strong></button>
+</body>
